@@ -6,12 +6,18 @@ import sys
 
 class Cell:
     all = []
-    setup_phase = True;
-    player1_time = True;
+    setup_phase = True
+    player1_time = True
+    player1_cells = []
+    player2_cells = []
     player1_Ships = []
     player2_Ships = []
-    cell_count_label_object = None
-    ships_count_label_object = None
+    player1_GuessedShips = []
+    player2_GuessedShips = []
+    player1_MarkedCells = []
+    player2_MarkedCells = []
+    player1_ships_count_label_object = None
+    player2_ships_count_label_object = None
 
     def __init__(self, x, y):
         self.x=x
@@ -33,82 +39,142 @@ class Cell:
         btn.bind('<Button-1>', self.left_click_actions) # left click
         self.cell_btn_object = btn
 
+    @staticmethod
+    def player_block(cell_List):
+        for cell in cell_List:
+            cell.cell_btn_object.unbind('<Button-1>')
+
+    @staticmethod
+    def player_reset(cell_list,marked_list,guessed_list):
+        for cell in cell_list:
+            if cell not in marked_list and cell not in guessed_list:
+                cell.cell_btn_object.bind('<Button-1>', cell.left_click_actions)
+
+    def is_click_valid(self):
+        return (
+                self not in Cell.player1_GuessedShips and
+                self not in Cell.player2_GuessedShips and
+                self not in Cell.player1_MarkedCells and
+                self not in Cell.player2_MarkedCells
+        )
+
+    def handle_setup_phase(self):
+        self.is_ship = True
+        self.cell_btn_object.unbind('<Button-1>')
+
+        color = "green" if Cell.player1_time else "blue"
+        self.cell_btn_object.configure(bg=color)
+
+        ship_list = Cell.player1_Ships if Cell.player1_time else Cell.player2_Ships
+        ship_list.append(self)
+
+        if len(ship_list) == 5:
+            Cell.player_block(Cell.player1_cells if Cell.player1_time else Cell.player2_cells)\
+
+            if Cell.player1_time:
+                Cell.player1_time = False
+                Cell.switch_to_player2()
+            else:
+                Cell.player1_time = True
+                Cell.setup_phase = False
+                Cell.player_block(Cell.player1_cells)
+                Cell.player_block(Cell.player2_cells)
+                Cell.player_reset(Cell.player1_cells, Cell.player1_MarkedCells, Cell.player1_GuessedShips)
+                Cell.player_reset(Cell.player2_cells, Cell.player2_MarkedCells, Cell.player2_GuessedShips)
+
+    def handle_game_phase(self):
+        if Cell.player1_time:
+            if self in Cell.player2_cells:
+                if self.is_ship:
+                    self.show_ship()
+                else:
+                    self.mark_cell()
+                Cell.player_block(Cell.player2_cells)
+                Cell.player1_time = False
+                Cell.player_reset(Cell.player1_cells, Cell.player1_MarkedCells, Cell.player1_GuessedShips)
+        else:
+            if self in Cell.player1_cells:
+                if self.is_ship:
+                    self.show_ship()
+                else:
+                    self.mark_cell()
+                Cell.player_block(Cell.player1_cells)
+                Cell.player1_time = True
+                Cell.player_reset(Cell.player2_cells, Cell.player2_MarkedCells, Cell.player2_GuessedShips)
 
     def left_click_actions(self, event):
+        if not self.is_click_valid():
+            return
         if Cell.setup_phase:
-            self.is_ship = True
-            self.cell_btn_object.configure(bg='blue')
-            if Cell.player1_time:
-                Cell.player1_Ships.append(self)
-                if len(Cell.player1_Ships) == 5:
-                    Cell.player1_time = False
-            else:
-                Cell.player2_Ships.append(self)
-                if len(Cell.player2_Ships) == 5:
-                    Cell.setup_phase = False
+            self.handle_setup_phase()
         else:
-            if self.is_ship:
-                self.show_ship()
-            else:
-                self.mark_cell()
-            self.cell_btn_object.unbind('<Button-1>')
+            self.handle_game_phase()
+
+    @staticmethod
+    def end_game(winner):
+        ctypes.windll.user32.MessageBoxW(0, f"Congratulations, {winner} wins!", f"{winner} wins.", 0)
+        sys.exit()
+
+    @staticmethod
+    def update_ship_labels():
+        p1_remaining = len(Cell.player1_Ships) - len(Cell.player1_GuessedShips)
+        p2_remaining = len(Cell.player2_Ships) - len(Cell.player2_GuessedShips)
+
+        Cell.player1_ships_count_label_object.configure(text=f"Player1 ships left: {p1_remaining}")
+        Cell.player2_ships_count_label_object.configure(text=f"Player2 ships left: {p2_remaining}")
+
+    def register_hit(self, guessed_ships):
+        guessed_ships.append(self)
+
     def show_ship(self):
         self.cell_btn_object.configure(bg='red')
-        if self in self.player1_Ships:
-            self.player1_Ships.remove(self)
+
+        if self in Cell.player1_Ships:
+            self.register_hit(Cell.player1_GuessedShips)
+            winner = "Player 2"
         else:
-            self.player2_Ships.remove(self)
-        if len(self.player1_Ships) == 0:
-            ctypes.windll.user32.MessageBoxW(0, "Congratulations, player 2 wins!", "Player 2 wins.", 0)
-            sys.exit()
-        if len(self.player2_Ships) == 0:
-            ctypes.windll.user32.MessageBoxW(0, "Congratulations, player 1 wins!", "Player 1 wins.", 0)
-            sys.exit()
-        Cell.ships_count_label_object.configure(text=f"Player1 ships left: {Cell.player1_Ships.__len__()}")
-        Cell.ships_count_label_object.configure(text=f"Player2 ships left: {Cell.player2_Ships.__len__()}")
+            self.register_hit(Cell.player2_GuessedShips)
+            winner = "Player 1"
+
+        Cell.update_ship_labels()
+
+        if len(Cell.player1_GuessedShips) == 5 or len(Cell.player2_GuessedShips) == 5:
+            Cell.end_game(winner)
 
     def mark_cell(self):
-        color = self.cell_btn_object.cget('bg')
-        if color == "orange":
-            self.cell_btn_object.config(bg="SystemButtonFace")
-        self.is_opened = True
-        number_of_surrounding_ships = 0
-        x = self.x,y = self.y
-        for a in range(-1, 2):
-            for b in range(-1, 2):
-                if (x + a) < 0 or (x + a) > (settings.button_rows - 1) or (y + b) < 0 or (y + b) > (settings.button_columns - 1):
-                    continue
-                if (self.get_cell_by_axis(x + a, y + b)).is_ship:
-                    number_of_surrounding_ships += 1
-        self.cell_btn_object.configure(text=number_of_surrounding_ships)
-        if number_of_surrounding_ships == 0:
-            self.automatic_0_check()
+        self.cell_btn_object.configure(bg='yellow')
+        self.cell_btn_object.unbind('<Button-1>')
+        marked_cells = Cell.player1_MarkedCells if Cell.player1_time else Cell.player2_MarkedCells
+        marked_cells.append(self)
 
-    def show_cell2(self):
-        color = self.cell_btn_object.cget('bg')
-        if color == "orange":
-            self.cell_btn_object.config(bg="SystemButtonFace")
-        if self.is_opened == False:
-            Cell.cell_count -= 1
-        self.is_opened = True
-        Cell.cell_count_label_object.configure(text=f"Cells left: {Cell.cell_count}")
-        number_of_surrounding_bombs = 0
-        x = self.x
-        y = self.y
-        for a in range(-1, 2):
-            for b in range(-1, 2):
-                if (x + a) < 0 or (x + a) > (settings.button_rows - 1) or (y + b) < 0 or (y + b) > (
-                        settings.button_columns - 1):
-                    continue
-                if (self.get_cell_by_axis(x + a, y + b)).is_mine:
-                    number_of_surrounding_bombs += 1
-        self.cell_btn_object.configure(text=number_of_surrounding_bombs)
+    def create_player1_ship_count(location):
+        lbl = Label(
+            location,
+            bg="black",
+            fg="white",
+            width=10,
+            height=2,
+            text=("Player1 ships left: 5"),
+            font=("", 21)
+        )
+        Cell.player1_ships_count_label_object = lbl
+
+    def create_player2_ship_count(location):
+        lbl = Label(
+            location,
+            bg="black",
+            fg="white",
+            width=10,
+            height=2,
+            text=("Player2 ships left: 5"),
+            font=("", 21)
+        )
+        Cell.player2_ships_count_label_object = lbl
 
     def get_cell_by_axis(self, x, y):
         for cell in Cell.all:
             if cell.x == x and cell.y == y:
                 return cell
-
     def list_of_surroundings(self):
         list_of_surroundings = []
         x = self.x
@@ -122,45 +188,11 @@ class Cell:
                 else:
                     list_of_surroundings.append(self.get_cell_by_axis(x + a, y + b))
         return list_of_surroundings
-
     def list_of_surroundings_lenght(self):
         list = self.list_of_surroundings()
         return len(list)
-
     def automatic_0_check(self):
         list = self.list_of_surroundings()
-
-
-
-
-
-
-
-
-
-
-    def create_cell_count_label(location):
-        lbl = Label(
-            location,
-            bg = "black",
-            fg = "white",
-            width = 10,
-            height = 2,
-            text = (f"Cells left: {Cell.cell_count}"),
-            font = ("", 21)
-        )
-        Cell.cell_count_label_object = lbl
-    def create_mines_count_label(location):
-        lbl = Label(
-            location,
-            bg = "black",
-            fg = "white",
-            width = 10,
-            height = 2,
-            text = (f"Mines left: {Cell.mines_count}"),
-            font = ("", 21)
-        )
-        Cell.ships_count_label_object = lbl
 
 
 
