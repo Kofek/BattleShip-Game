@@ -41,7 +41,7 @@ player1 = Frame(
     width=utilities.width_percentage(80),
     height=utilities.height_percentage(80)
 )
-player1.place(x=utilities.width_percentage(20), y=utilities.height_percentage(20))
+player1.place(x=utilities.width_percentage(30), y=utilities.height_percentage(20))
 
 player2 = Frame(
     root,
@@ -49,7 +49,7 @@ player2 = Frame(
     width=utilities.width_percentage(80),
     height=utilities.height_percentage(80)
 )
-player2.place(x=utilities.width_percentage(60), y=utilities.height_percentage(20))
+player2.place(x=utilities.width_percentage(70), y=utilities.height_percentage(20))
 
 for x in range(settings.button_rows):
     for y in range(settings.button_columns):
@@ -61,6 +61,15 @@ for x in range(settings.button_rows):
             )
         button.cell_btn_object.grid(column=x, row=y)
 
+for x in range(settings.button_columns):
+    for y in range(settings.button_rows):
+        button = Cell(x,y)
+        button.create_btn_object(
+            player2,
+            height = settings.button_height,
+            width = settings.button_width
+            )
+        button.cell_btn_object.grid(column=x, row=y)
 
 # uruchomienie okna
 root.mainloop()
