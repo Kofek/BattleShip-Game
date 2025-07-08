@@ -5,11 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2e83abbc-4799-4014-9233-6997b768c404" name="Changes" comment="First Commit">
-      <change afterPath="$PROJECT_DIR$/scr/cell.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scr/settings.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scr/utilities.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scr/cell.py" beforeDir="false" afterPath="$PROJECT_DIR$/scr/cell.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scr/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/scr/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scr/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/scr/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scr/utilities.py" beforeDir="false" afterPath="$PROJECT_DIR$/scr/utilities.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -91,7 +92,7 @@
       <option name="presentableId" value="Default" />
       <updated>1751971537686</updated>
       <workItem from="1751971538813" duration="4004000" />
-      <workItem from="1751988020885" duration="328000" />
+      <workItem from="1751988020885" duration="633000" />
     </task>
     <task id="LOCAL-00001" summary="First Commit">
       <option name="closed" value="true" />
