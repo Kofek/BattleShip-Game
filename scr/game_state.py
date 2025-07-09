@@ -7,7 +7,11 @@ class Game_State:
     setup_phase = True
     player1_time = True
     switch_to_player2 = None
+    current_ship_direction = 'horizontal'
 
+    ships_to_place = [4, 3, 3, 2, 2, 2, 1, 1, 1, 1]
+    current_ship_index = 0
+    current_ship_cells = []
 
     @staticmethod
     def player_block(cell_list):

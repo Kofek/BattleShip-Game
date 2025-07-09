@@ -18,6 +18,9 @@ class Cell:
     player1_ships_count_label_object = None
     player2_ships_count_label_object = None
     message_label_object = None
+    direction_btn_object = None
+
+
 
     def __init__(self, x, y):
         self.x=x
@@ -75,19 +78,43 @@ class Cell:
             self.handle_game_phase()
 
     def handle_setup_phase(self):
-        self.is_ship = True
-        self.cell_btn_object.unbind('<Button-1>')
+        current_ship_length = Game_State.ships_to_place[Game_State.current_ship_index]
+        direction = Game_State.current_ship_direction
+        start_x,start_y = self.x, self.y
+        positions = []
+        for i in range(current_ship_length):
+            x = start_x + i if direction == "horizontal" else start_x
+            y = start_y if direction == "horizontal" else start_y + i
 
-        color = "green" if Game_State.player1_time else "blue"
-        self.cell_btn_object.configure(bg=color)
+            if x >= settings.button_rows or y >= settings.button_columns:
+                return
+            if Game_State.player1_time:
+                cell = self.get_cell_by_axis(x, y,"player1")
+            else:
+                cell = self.get_cell_by_axis(x, y,"player2")
+            if cell is None or cell.is_ship:
+                return
+
+            positions.append(cell)
+
+        for cell in positions:
+            cell.is_ship = True
+            cell.cell_btn_object.configure(bg="green" if Game_State.player1_time else "blue")
+            cell.cell_btn_object.unbind('<Button-1>')
+            Game_State.current_ship_cells.append(cell)
 
         ship_list = Cell.player1_Ships if Game_State.player1_time else Cell.player2_Ships
-        ship_list.append(self)
+        ship_list.append(Game_State.current_ship_cells.copy())
 
-        if len(ship_list) == 5:
-            Game_State.player_block(Cell.player1_cells if Game_State.player1_time else Cell.player2_cells)
+        Game_State.current_ship_cells.clear()
+        Game_State.current_ship_index += 1
+
+        if Game_State.current_ship_index >= len(Game_State.ships_to_place):
             if Game_State.player1_time:
+                Game_State.player_block(Cell.player1_cells)
                 Game_State.player1_time = False
+                Game_State.current_ship_index = 0
+                Game_State.current_ship_cells.clear()
                 Game_State.switch_to_player2()
                 Game_State.remove_buttons(Cell.player1_cells)
             else:
@@ -100,7 +127,6 @@ class Cell:
                 Game_State.remove_buttons(Cell.player1_cells)
                 Game_State.white_all_buttons()
             inscriptions.update_message_label()
-
     def handle_game_phase(self):
         if Game_State.player1_time:
             if self in Cell.player2_cells:
@@ -144,8 +170,13 @@ class Cell:
         marked_cells.append(self)
 
 
-    def get_cell_by_axis(self, x, y):
-        for cell in Cell.all:
+    def get_cell_by_axis(self, x, y,player):
+        cell_list = []
+        if player == "player1":
+            cell_list = Cell.player1_cells
+        elif player == "player2":
+            cell_list = Cell.player2_cells
+        for cell in cell_list:
             if cell.x == x and cell.y == y:
                 return cell
     def list_of_surroundings(self):
