@@ -38,6 +38,17 @@ class Game_State:
         sys.exit()
 
     @staticmethod
+    def white_buttons(cell_list):
+        for cell in cell_list:
+            cell.cell_btn_object.configure(bg = 'white')
+
+    @staticmethod
+    def white_all_buttons():
+        from cell import Cell
+        Game_State.white_buttons(Cell.player1_cells)
+        Game_State.white_buttons(Cell.player2_cells)
+
+    @staticmethod
     def finish_turn(own_cells, opponent_cells, marked, guessed, player1_time):
         import inscriptions
         Game_State.player_reset(own_cells, marked, guessed)

@@ -98,6 +98,7 @@ class Cell:
                 Game_State.player_reset(Cell.player1_cells, Cell.player1_MarkedCells,Cell.player1_GuessedShips)
                 Game_State.player_reset(Cell.player2_cells, Cell.player2_MarkedCells,Cell.player2_GuessedShips)
                 Game_State.remove_buttons(Cell.player1_cells)
+                Game_State.white_all_buttons()
             inscriptions.update_message_label()
 
     def handle_game_phase(self):
