@@ -8,5 +8,3 @@ cells_count = button_columns*button_rows
 
 button_width = 4
 button_height = 2
-
-number_of_mines = (40)

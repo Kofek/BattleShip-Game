@@ -1,0 +1,51 @@
+import ctypes
+import sys
+import time
+
+
+class Game_State:
+    setup_phase = True
+    player1_time = True
+    switch_to_player2 = None
+
+
+    @staticmethod
+    def player_block(cell_list):
+            for cell in cell_list:
+                cell.cell_btn_object.unbind('<Button-1>')
+
+    @staticmethod
+    def player_reset(cell_list,marked_list,guessed_list):
+        for cell in cell_list:
+            if cell not in marked_list and cell not in guessed_list:
+                cell.cell_btn_object.bind('<Button-1>', cell.left_click_actions)
+
+    @staticmethod
+    def remove_buttons(cell_list):
+        for cell in cell_list:
+            if cell.cell_btn_object:
+                cell.cell_btn_object.grid_forget()
+
+    @staticmethod
+    def restore_buttons(cell_list):
+        for cell in cell_list:
+            if cell.cell_btn_object:
+                cell.cell_btn_object.grid(column=cell.x, row=cell.y)
+
+    @staticmethod
+    def end_game(winner):
+        ctypes.windll.user32.MessageBoxW(0, f"Congratulations, {winner} wins!", f"{winner} wins.", 0)
+        sys.exit()
+
+    @staticmethod
+    def finish_turn(own_cells, opponent_cells, marked, guessed, player1_time):
+        import inscriptions
+        Game_State.player_reset(own_cells, marked, guessed)
+        Game_State.restore_buttons(own_cells)
+        Game_State.player_block(opponent_cells)
+        Game_State.remove_buttons(opponent_cells)
+        Game_State.player1_time = player1_time
+        inscriptions.update_message_label()
+
+
+

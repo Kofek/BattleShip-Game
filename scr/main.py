@@ -1,5 +1,7 @@
 from tkinter import *
 from cell import Cell
+from game_state import Game_State
+import inscriptions
 import settings
 import utilities
 import ctypes
@@ -59,11 +61,14 @@ player2 = Frame(
 )
 player2.place(x=utilities.width_percentage(70), y=utilities.height_percentage(40))
 
-Cell.switch_to_player2 = Cell.bulid_player_grid("player2",player2)
+def switch_to_player2():
+    Cell.build_player_grid("player2", player2)
 
-Cell.creating_labels(left_frame,left_frame,middle_frame)
+Game_State.switch_to_player2 = switch_to_player2
 
-Cell.bulid_player_grid("player1",player1)
+inscriptions.creating_labels(left_frame, left_frame, middle_frame)
+
+Cell.build_player_grid("player1", player1)
 
 # uruchomienie okna
 root.mainloop()
