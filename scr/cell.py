@@ -2,6 +2,7 @@ from tkinter import Button, Label
 import settings
 import inscriptions
 from game_state import Game_State
+import app_contex
 import time
 
 
@@ -17,10 +18,6 @@ class Cell:
     player2_MarkedCells = []
     player1_ships_count_label_object = None
     player2_ships_count_label_object = None
-    message_label_object = None
-    direction_btn_object = None
-
-
 
     def __init__(self, x, y):
         self.x=x
@@ -111,22 +108,22 @@ class Cell:
 
         if Game_State.current_ship_index >= len(Game_State.ships_to_place):
             if Game_State.player1_time:
-                Game_State.player_block(Cell.player1_cells)
+                Game_State.block_player_cells(Cell.player1_cells)
                 Game_State.player1_time = False
                 Game_State.current_ship_index = 0
                 Game_State.current_ship_cells.clear()
                 Game_State.switch_to_player2()
-                Game_State.remove_buttons(Cell.player1_cells)
+                Game_State.forget_player_buttons(Cell.player1_cells)
             else:
                 Game_State.player1_time = True
                 Game_State.setup_phase = False
-                Game_State.player_block(Cell.player1_cells)
-                Game_State.player_block(Cell.player2_cells)
-                Game_State.player_reset(Cell.player1_cells, Cell.player1_MarkedCells,Cell.player1_GuessedShips)
-                Game_State.player_reset(Cell.player2_cells, Cell.player2_MarkedCells,Cell.player2_GuessedShips)
-                Game_State.remove_buttons(Cell.player1_cells)
-                Game_State.white_all_buttons()
-            inscriptions.update_message_label()
+                Game_State.block_player_cells(Cell.player1_cells)
+                Game_State.block_player_cells(Cell.player2_cells)
+                Game_State.reset_player_cells(Cell.player1_cells, Cell.player1_MarkedCells, Cell.player1_GuessedShips)
+                Game_State.reset_player_cells(Cell.player2_cells, Cell.player2_MarkedCells, Cell.player2_GuessedShips)
+                Game_State.forget_player_buttons(Cell.player1_cells)
+                Game_State.set_all_buttons_color_to_white()
+            inscriptions.update_message_label(app_contex.root)
     def handle_game_phase(self):
         if Game_State.player1_time:
             if self in Cell.player2_cells:
@@ -134,7 +131,7 @@ class Cell:
                     self.show_ship()
                 else:
                     self.mark_cell()
-                Game_State.player_block(Cell.player2_cells)
+                Game_State.block_player_cells(Cell.player2_cells)
                 self.cell_btn_object.after(1500,lambda:Game_State.finish_turn(Cell.player1_cells,Cell.player2_cells,Cell.player1_MarkedCells,Cell.player1_GuessedShips,False))
         else:
             if self in Cell.player1_cells:
@@ -142,7 +139,7 @@ class Cell:
                     self.show_ship()
                 else:
                     self.mark_cell()
-                Game_State.player_block(Cell.player1_cells)
+                Game_State.block_player_cells(Cell.player1_cells)
                 self.cell_btn_object.after(1500,lambda:Game_State.finish_turn(Cell.player2_cells,Cell.player1_cells,Cell.player2_MarkedCells,Cell.player2_GuessedShips,True))
 
     def show_ship(self):
@@ -155,7 +152,7 @@ class Cell:
             self.register_hit(Cell.player2_GuessedShips)
             winner = "Player 1"
 
-        inscriptions.update_ship_labels()
+        inscriptions.update_ship_labels(app_contex.root)
 
         if len(Cell.player1_GuessedShips) == 5 or len(Cell.player2_GuessedShips) == 5:
             Game_State.end_game(winner)

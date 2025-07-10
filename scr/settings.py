@@ -1,3 +1,4 @@
+
 WIDTH=1920
 HEIGHT=1080
 
@@ -13,3 +14,10 @@ number_of_4_ships = 1
 number_of_3_ships = 2
 number_of_2_ships = 3
 number_of_1_ships = 4
+
+player1_ship_count_coordinated = [0,0]
+player2_ship_count_coordinated = [0,50]
+message_label_object_coordinated = [0.5,0.5,'center']
+direction_btn_object_coordinated = [0.5,0.5,'center']
+
+
