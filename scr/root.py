@@ -12,7 +12,7 @@ class Root:
 
         self.top_frame = Frame(
             self.root,
-            bg='black',
+            bg=settings.top_frame_color,
             width=utilities.width_percentage(100),
             height=utilities.height_percentage(20)
         )
@@ -20,7 +20,7 @@ class Root:
 
         self.left_frame = Frame(
             self.root,
-            bg='yellow',
+            bg=settings.left_frame_color,
             width=utilities.width_percentage(20),
             height=utilities.height_percentage(80)
         )
@@ -28,7 +28,7 @@ class Root:
 
         self.middle_frame = Frame(
             self.root,
-            bg='purple',
+            bg=settings.middle_frame_color,
             width=utilities.width_percentage(80),
             height=utilities.height_percentage(20)
         )
@@ -36,7 +36,7 @@ class Root:
 
         self.player1 = Frame(
             self.root,
-            bg='green',
+            bg=settings.player1_label_color,
             width=utilities.width_percentage(30),
             height=utilities.height_percentage(60)
         )
@@ -44,7 +44,7 @@ class Root:
 
         self.between_players = Frame(
             self.root,
-            bg='red',
+            bg=settings.between_players_label_color,
             width=utilities.width_percentage(20),
             height=utilities.height_percentage(30)
         )
@@ -52,7 +52,7 @@ class Root:
 
         self.player2 = Frame(
             self.root,
-            bg='blue',
+            bg=settings.player2_label_color,
             width=utilities.width_percentage(30),
             height=utilities.height_percentage(60)
         )
@@ -60,7 +60,7 @@ class Root:
 
         self.game_title = Label(
             self.top_frame,
-            bg="black",
+            bg=settings.game_title_color,
             fg="white",
             text="BattleShip",
             font=("", 48)

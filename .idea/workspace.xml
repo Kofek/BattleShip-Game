@@ -4,12 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2e83abbc-4799-4014-9233-6997b768c404" name="Changes" comment="New version.">
+    <list default="true" id="2e83abbc-4799-4014-9233-6997b768c404" name="Changes" comment="New version. Small update.">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scr/cell.py" beforeDir="false" afterPath="$PROJECT_DIR$/scr/cell.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scr/game_state.py" beforeDir="false" afterPath="$PROJECT_DIR$/scr/game_state.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scr/inscriptions.py" beforeDir="false" afterPath="$PROJECT_DIR$/scr/inscriptions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scr/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/scr/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scr/root.py" beforeDir="false" afterPath="$PROJECT_DIR$/scr/root.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scr/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/scr/settings.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -103,7 +100,7 @@
       <workItem from="1752015560078" duration="37000" />
       <workItem from="1752057176136" duration="31516000" />
       <workItem from="1752167441949" duration="10554000" />
-      <workItem from="1752345261798" duration="810000" />
+      <workItem from="1752345261798" duration="1352000" />
     </task>
     <task id="LOCAL-00001" summary="First Commit">
       <option name="closed" value="true" />
@@ -169,7 +166,15 @@
       <option name="project" value="LOCAL" />
       <updated>1752183535228</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="New version. Small update.">
+      <option name="closed" value="true" />
+      <created>1752346315784</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1752346315784</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -194,13 +199,14 @@
     <MESSAGE value="New version, players don't see enemy ships.  ." />
     <MESSAGE value="New version, players have ships with various length." />
     <MESSAGE value="New version." />
-    <option name="LAST_COMMIT_MESSAGE" value="New version." />
+    <MESSAGE value="New version. Small update." />
+    <option name="LAST_COMMIT_MESSAGE" value="New version. Small update." />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/BattleShip_Game$inscriptions.coverage" NAME="inscriptions Coverage Results" MODIFIED="1752168617623" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/scr" />
     <SUITE FILE_PATH="coverage/BattleShip_Game$root.coverage" NAME="root Coverage Results" MODIFIED="1752172805955" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/scr" />
     <SUITE FILE_PATH="coverage/BattleShip_Game$game_state.coverage" NAME="game_state Coverage Results" MODIFIED="1752168423881" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/scr" />
-    <SUITE FILE_PATH="coverage/BattleShip_Game$main.coverage" NAME="main Coverage Results" MODIFIED="1752346076064" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/scr" />
+    <SUITE FILE_PATH="coverage/BattleShip_Game$main.coverage" NAME="main Coverage Results" MODIFIED="1752346596536" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/scr" />
     <SUITE FILE_PATH="coverage/BattleShip_Game$cell.coverage" NAME="cell Coverage Results" MODIFIED="1752094119777" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/scr" />
     <SUITE FILE_PATH="coverage/BattleShip_Game$utilities.coverage" NAME="utilities Coverage Results" MODIFIED="1751972050722" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/scr" />
     <SUITE FILE_PATH="coverage/BattleShip_Game$settings.coverage" NAME="settings Coverage Results" MODIFIED="1751991011399" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/scr" />

@@ -19,4 +19,12 @@ player2_ship_count_coordinates = [0, 50]
 message_label_object_coordinates = [0.5, 0.5, 'center']
 direction_btn_object_coordinates = [0.5, 0.5, 'center']
 
+left_frame_color = 'black'
+top_frame_color = 'black'
+middle_frame_color = 'black'
+player1_label_color = 'black'
+between_players_label_color = 'black'
+player2_label_color = 'black'
+game_title_color = 'black'
+
 
