@@ -3,7 +3,6 @@ import settings
 import inscriptions
 from game_state import Game_State
 import app_contex
-import time
 
 
 class Cell:
@@ -106,7 +105,9 @@ class Cell:
         Game_State.current_ship_cells.clear()
         Game_State.current_ship_index += 1
 
-        if Game_State.current_ship_index >= len(Game_State.ships_to_place):
+        inscriptions.update_message_label(app_contex.root)
+
+        if Game_State.current_ship_index >= (len(Game_State.ships_to_place)-1):
             if Game_State.player1_time:
                 Game_State.block_player_cells(Cell.player1_cells)
                 Game_State.player1_time = False
@@ -124,6 +125,7 @@ class Cell:
                 Game_State.forget_player_buttons(Cell.player1_cells)
                 Game_State.set_all_buttons_color_to_white()
             inscriptions.update_message_label(app_contex.root)
+
     def handle_game_phase(self):
         if Game_State.player1_time:
             if self in Cell.player2_cells:

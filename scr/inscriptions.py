@@ -1,10 +1,8 @@
 from tkinter import Button, Label
 from game_state import Game_State
 import utilities
-import app_contex
 
 def create_player1_ship_count(root,location):
-    from cell import Cell
     lbl = Label(
         location,
         bg="black",
@@ -85,7 +83,7 @@ def update_ship_labels(root):
 
 def update_message_label(root):
     if Game_State.setup_phase:
-        if not Game_State.player1_time:
+        if Game_State.player1_time:
             root.message_label_object.configure(text=f"Player 1, place your {Game_State.ships_to_place[Game_State.current_ship_index]}-cell ship by selecting the starting cell.")
         else:
             root.message_label_object.configure(text=f"Player 2, place your {Game_State.ships_to_place[Game_State.current_ship_index]}-cell ship by selecting the starting cell.")

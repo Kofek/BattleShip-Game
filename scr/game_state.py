@@ -1,6 +1,5 @@
 import ctypes
 import sys
-import time
 import app_contex
 
 
