@@ -9,12 +9,15 @@ class Cell:
     all = []
     player1_cells = []
     player2_cells = []
-    player1_Ships = []
-    player2_Ships = []
-    player1_GuessedShips = []
-    player2_GuessedShips = []
     player1_MarkedCells = []
     player2_MarkedCells = []
+    player1_Ships = []
+    player2_Ships = []
+    player1_GuessedCells = []
+    player2_GuessedCells = []
+    player1_GuessedShips = []
+    player2_GuessedShips = []
+
     player1_ships_count_label_object = None
     player2_ships_count_label_object = None
 
@@ -58,9 +61,12 @@ class Cell:
                 cell_list.append(button)
 
     def is_click_valid(self):
+        def is_in_guessed_ships(cell, guessed_ships):
+            return any(cell in ship for ship in guessed_ships)
+
         return (
-                self not in Cell.player1_GuessedShips and
-                self not in Cell.player2_GuessedShips and
+                not is_in_guessed_ships(self, Cell.player1_GuessedShips) and
+                not is_in_guessed_ships(self, Cell.player2_GuessedShips) and
                 self not in Cell.player1_MarkedCells and
                 self not in Cell.player2_MarkedCells
         )
@@ -74,6 +80,7 @@ class Cell:
             self.handle_game_phase()
 
     def handle_setup_phase(self):
+
         current_ship_length = Game_State.ships_to_place[Game_State.current_ship_index]
         direction = Game_State.current_ship_direction
         start_x,start_y = self.x, self.y
@@ -81,7 +88,6 @@ class Cell:
         for i in range(current_ship_length):
             x = start_x + i if direction == "horizontal" else start_x
             y = start_y if direction == "horizontal" else start_y + i
-
             if x >= settings.button_rows or y >= settings.button_columns:
                 return
             if Game_State.player1_time:
@@ -90,7 +96,6 @@ class Cell:
                 cell = self.get_cell_by_axis(x, y,"player2")
             if cell is None or cell.is_ship:
                 return
-
             positions.append(cell)
 
         for cell in positions:
@@ -105,9 +110,7 @@ class Cell:
         Game_State.current_ship_cells.clear()
         Game_State.current_ship_index += 1
 
-        inscriptions.update_message_label(app_contex.root)
-
-        if Game_State.current_ship_index >= (len(Game_State.ships_to_place)-1):
+        if Game_State.current_ship_index >= len(Game_State.ships_to_place):
             if Game_State.player1_time:
                 Game_State.block_player_cells(Cell.player1_cells)
                 Game_State.player1_time = False
@@ -125,6 +128,9 @@ class Cell:
                 Game_State.forget_player_buttons(Cell.player1_cells)
                 Game_State.set_all_buttons_color_to_white()
             inscriptions.update_message_label(app_contex.root)
+        inscriptions.update_message_label(app_contex.root)
+
+
 
     def handle_game_phase(self):
         if Game_State.player1_time:
@@ -133,34 +139,43 @@ class Cell:
                     self.show_ship()
                 else:
                     self.mark_cell()
-                Game_State.block_player_cells(Cell.player2_cells)
-                self.cell_btn_object.after(1500,lambda:Game_State.finish_turn(Cell.player1_cells,Cell.player2_cells,Cell.player1_MarkedCells,Cell.player1_GuessedShips,False))
+                    Game_State.block_player_cells(Cell.player2_cells)
+                    self.cell_btn_object.after(1500,lambda:Game_State.finish_turn(Cell.player1_cells,Cell.player2_cells,Cell.player1_MarkedCells,Cell.player1_GuessedShips,False))
         else:
             if self in Cell.player1_cells:
                 if self.is_ship:
                     self.show_ship()
                 else:
                     self.mark_cell()
-                Game_State.block_player_cells(Cell.player1_cells)
-                self.cell_btn_object.after(1500,lambda:Game_State.finish_turn(Cell.player2_cells,Cell.player1_cells,Cell.player2_MarkedCells,Cell.player2_GuessedShips,True))
+                    Game_State.block_player_cells(Cell.player1_cells)
+                    self.cell_btn_object.after(1500,lambda:Game_State.finish_turn(Cell.player2_cells,Cell.player1_cells,Cell.player2_MarkedCells,Cell.player2_GuessedShips,True))
 
     def show_ship(self):
         self.cell_btn_object.configure(bg='red')
-
-        if self in Cell.player1_Ships:
-            self.register_hit(Cell.player1_GuessedShips)
-            winner = "Player 2"
-        else:
-            self.register_hit(Cell.player2_GuessedShips)
+        print("DEBUG: Kliknięta komórka:", self)
+        print("Czy w player1_Ships:", any(self in ship for ship in Cell.player1_Ships))
+        print("Czy w player2_Ships:", any(self in ship for ship in Cell.player2_Ships))
+        if Game_State.player1_time:
+            self.register_hit(Cell.player2_Ships, Cell.player2_GuessedCells, Cell.player2_GuessedShips)
             winner = "Player 1"
+        else:
+            self.register_hit(Cell.player1_Ships, Cell.player1_GuessedCells, Cell.player1_GuessedShips)
+            winner = "Player 2"
 
         inscriptions.update_ship_labels(app_contex.root)
 
-        if len(Cell.player1_GuessedShips) == 5 or len(Cell.player2_GuessedShips) == 5:
+        if len(Cell.player1_GuessedShips) == len(Cell.player2_Ships) or len(Cell.player2_GuessedShips) == len(Cell.player1_Ships):
             Game_State.end_game(winner)
 
-    def register_hit(self, guessed_ships):
-        guessed_ships.append(self)
+    def register_hit(self, ships, guessed_cells, guessed_ships):
+        if self not in guessed_cells:
+            guessed_cells.append(self)
+        for ship in ships:
+            if self in ship:
+                if all(cell in guessed_cells for cell in ship):
+                    if ship not in guessed_ships:
+                        guessed_ships.append(ship)
+                        print(f"Zatopiono statek: {[(c.x, c.y) for c in ship]}")
 
     def mark_cell(self):
         self.cell_btn_object.configure(bg='yellow')
@@ -168,8 +183,8 @@ class Cell:
         marked_cells = Cell.player1_MarkedCells if Game_State.player1_time else Cell.player2_MarkedCells
         marked_cells.append(self)
 
-
-    def get_cell_by_axis(self, x, y,player):
+    @staticmethod
+    def get_cell_by_axis(x, y,player):
         cell_list = []
         if player == "player1":
             cell_list = Cell.player1_cells
@@ -178,7 +193,9 @@ class Cell:
         for cell in cell_list:
             if cell.x == x and cell.y == y:
                 return cell
-    def list_of_surroundings(self):
+        return None
+
+    def list_of_surroundings(self,player):
         list_of_surroundings = []
         x = self.x
         y = self.y
@@ -189,10 +206,9 @@ class Cell:
                 elif a == 0 and b == 0:
                     continue
                 else:
-                    list_of_surroundings.append(self.get_cell_by_axis(x + a, y + b))
+                    list_of_surroundings.append(self.get_cell_by_axis(x + a, y + b,player))
         return list_of_surroundings
-    def list_of_surroundings_lenght(self):
-        list = self.list_of_surroundings()
-        return len(list)
-    def automatic_0_check(self):
-        list = self.list_of_surroundings()
+
+    def list_of_surroundings_len(self,player):
+        list_of_s = self.list_of_surroundings(player)
+        return len(list_of_s)
